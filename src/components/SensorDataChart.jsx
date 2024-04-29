@@ -35,13 +35,14 @@ const SensorDataChart = () => {
 
       const sensorIds = [...new Set(sensorData.map(sensor => sensor.sensor_id))];
       const timestamps = sensorData.map(entry => DateTime.fromISO(entry.timestamp).toFormat('mm:ss'));
+      const colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'magenta'];
 
 
       const datasets = sensorIds.map((sensorId, index) => ({
         label: `Sensor ${sensorId}`,
         data: sensorData.filter(sensor => sensor.sensor_id === sensorId).map(sensor => sensor.data),
         fill: false,
-        borderColor: `rgb(${index * 2}, ${index}, ${index})`,
+        borderColor: colors[index % colors.length],
         tension: 0.1
       }));
 

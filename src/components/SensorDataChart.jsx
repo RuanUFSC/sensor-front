@@ -15,8 +15,8 @@ const SensorDataChart = () => {
     }
     client.onmessage = (message) => {
       const data = JSON.parse(message.data)
-      if (JSON.stringify(data) != JSON.stringify(sensorData)) {
-        setSensorData(data)
+      if (JSON.stringify(data.reverse()) != JSON.stringify(sensorData)) {
+        setSensorData(data.reverse())
       }
     }
 
@@ -33,16 +33,16 @@ const SensorDataChart = () => {
         chartInstance.destroy()
       }
 
-      const sensorIds = [...new Set(sensorData.map(sensor => sensor.sensor_id))];
-      const timestamps = sensorData.map(entry => DateTime.fromISO(entry.timestamp).toFormat('mm:ss'));
+      const sensorIds = [...new Set(sensorData.map(sensor => sensor.sensor_id))].sort();
+      const timestamps = sensorData.map(entry => DateTime.fromISO(entry.timestamp).toFormat('hh:mm:ss'));
       const colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'magenta'];
 
 
-      const datasets = sensorIds.map((sensorId, index) => ({
+      const datasets = sensorIds.map((sensorId) => ({
         label: `Sensor ${sensorId}`,
         data: sensorData.filter(sensor => sensor.sensor_id === sensorId).map(sensor => sensor.data),
         fill: false,
-        borderColor: colors[index % colors.length],
+        borderColor: colors[sensorId],
         tension: 0.1
       }));
 
@@ -51,7 +51,11 @@ const SensorDataChart = () => {
         data: {
           labels: timestamps,
           datasets: datasets
-        }
+        },
+        options: {
+          animation: {
+            duration: 0
+        }}
       });
       setChartInstance(newChartInstance)
     }

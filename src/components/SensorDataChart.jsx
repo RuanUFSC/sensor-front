@@ -42,10 +42,11 @@ const SensorDataChart = () => {
         groupedData[sensorId] = sensorEntries.slice(0, 10)
       })
       
-      const timestamps = groupedData[1].reverse().map(dado => DateTime.fromISO(dado.timestamp).toFormat('hh:mm:ss'))
+      const timestamps = groupedData[1].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)).map(dado => DateTime.fromISO(dado.timestamp).toFormat('hh:mm:ss'))
+      console.log(timestamps)
       const datasets = sensorIds.map((sensorId) => ({
         label: `Sensor ${sensorId}`,
-        data: groupedData[sensorId].map(sensor => sensor.data),
+        data: groupedData[sensorId].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)).map(sensor => sensor.data),
         fill: false,
         borderColor: colors[sensorId % 7],
         tension: 0.1
